@@ -10,9 +10,19 @@ import pytest
                                   '?promo=offer4', '?promo=offer5', '?promo=offer6',
                                   pytest.param('?promo=offer7', marks=pytest.mark.xfail), '?promo=offer8',
                                   '?promo=offer9'])
-@pytest.mark.need_review
-def test_guest_can_add_product_to_basket(browser, link):
+def test_guest_can_add_product_to_basket_promo(browser, link):
     link = f"http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/{link}"
+    page = ProductPage(browser, link)
+    page.open()
+    product_name_before_adding, product_price_before_adding = page.add_to_basket()
+    page.solve_quiz_and_get_code()
+    page.should_be_success_message()
+    page.should_be_added_procuct_page(product_name_before_adding, product_price_before_adding)
+
+
+@pytest.mark.need_review
+def test_guest_can_add_product_to_basket(browser):
+    link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0"
     page = ProductPage(browser, link)
     page.open()
     product_name_before_adding, product_price_before_adding = page.add_to_basket()
